@@ -1,0 +1,5 @@
+.packages
+*.iml
+*.lock
+.idea/
+.dart_tool/

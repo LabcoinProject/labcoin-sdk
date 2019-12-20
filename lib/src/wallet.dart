@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:crypton/crypton.dart';
-import 'package:labcoin_sdk/src/pemhelper.dart';
+import 'package:labcoin_sdk/src/utils/pemhelper.dart';
 
 class Wallet {
   ECPrivateKey _privateKey;

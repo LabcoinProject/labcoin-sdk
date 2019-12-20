@@ -2,7 +2,7 @@ enum Schemes { HTTP, HTTPS }
 
 class LabcoinUri {
   String _scheme = 'http';
-  String _nodeAddress;
+  final String _nodeAddress;
   String _path;
 
   String get scheme => _scheme;

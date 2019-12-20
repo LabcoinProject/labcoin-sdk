@@ -11,7 +11,7 @@ class LabcoinClient {
   }
 
   Future<List> _sendBlockchainRequest(String pathSegment) async {
-    Response response =
+    var response =
         await get('${nodeAddress.toString()}blockchain/$pathSegment');
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -28,7 +28,7 @@ class LabcoinClient {
     if (!length.isNegative) {
       length *= -1;
     }
-    String lengthString = length.toString();
+    var lengthString = length.toString();
     return _sendBlockchainRequest(lengthString);
   }
 
@@ -36,12 +36,12 @@ class LabcoinClient {
     if (length.isNegative) {
       length *= -1;
     }
-    String lengthString = length.toString();
+    var lengthString = length.toString();
     return _sendBlockchainRequest(lengthString);
   }
 
   Future<int> getWalletBalance(String walletAddress) async {
-    Response response =
+    var response =
         await get('${nodeAddress.toString()}wallet?walletId=$walletAddress');
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['funds'] as int;

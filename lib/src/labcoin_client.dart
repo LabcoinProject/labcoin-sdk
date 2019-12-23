@@ -40,7 +40,7 @@ class LabcoinClient {
 
   Future<int> getWalletBalance(String walletAddress) async {
     var response =
-        await get('${nodeAddress.toString()}wallet?walletId=$walletAddress');
+        await get('${nodeAddress.toString()}wallet?walletId=${Uri.encodeQueryComponent(walletAddress)}');
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['funds'] as int;
     }

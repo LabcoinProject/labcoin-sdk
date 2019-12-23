@@ -6,9 +6,7 @@ import 'package:labcoin_sdk/labcoin_sdk.dart';
 class LabcoinClient {
   LabcoinUri nodeAddress;
 
-  LabcoinClient(this.nodeAddress) {
-    print(nodeAddress.toString());
-  }
+  LabcoinClient(this.nodeAddress);
 
   Future<List> _sendBlockchainRequest(String pathSegment) async {
     var response =
@@ -20,7 +18,7 @@ class LabcoinClient {
   }
 
   void sendTransaction(Transaction transaction) =>
-      post('${nodeAddress.toString()}transaction', body: transaction.toMap());
+      post('${nodeAddress.toString()}transaction', body: jsonEncode(transaction.toMap()));
 
   Future<List> getFullBlockchain() async => _sendBlockchainRequest('full');
 

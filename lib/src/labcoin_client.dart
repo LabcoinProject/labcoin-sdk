@@ -18,7 +18,8 @@ class LabcoinClient {
   }
 
   void sendTransaction(Transaction transaction) =>
-      post('${nodeAddress.toString()}transaction', body: jsonEncode(transaction.toMap()));
+      post('${nodeAddress.toString()}transaction',
+          body: jsonEncode(transaction.toMap()));
 
   Future<List> getFullBlockchain() async => _sendBlockchainRequest('full');
 
@@ -39,10 +40,24 @@ class LabcoinClient {
   }
 
   Future<int> getWalletBalance(String walletAddress) async {
-    var response =
-        await get('${nodeAddress.toString()}wallet?walletId=${Uri.encodeQueryComponent(walletAddress)}');
+    var response = await get(
+        '${nodeAddress.toString()}wallet?walletId=${Uri.encodeQueryComponent(walletAddress)}');
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['funds'] as int;
+    }
+    return null;
+  }
+
+  Future<List<Transaction>> getWalletTransactions(String walletAddress) async {
+    var response = await get(
+        '${nodeAddress.toString()}wallet/transactions?walletId=${Uri.encodeQueryComponent(walletAddress)}');
+    if (response.statusCode == 200) {
+      var trxList = <Transaction>[];
+      (jsonDecode(response.body)['transactions'] as List<Map<String, dynamic>>)
+          .forEach((var trx) {
+        trxList.add(Transaction.fromMap(trx));
+      });
+      return trxList;
     }
     return null;
   }

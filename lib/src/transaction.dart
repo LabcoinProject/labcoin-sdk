@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:crypton/crypton.dart';
+import 'package:labcoin_sdk/src/utils.dart';
 
 const String GENERATED_ADDRESS = '11111111111111111111111111111111111111111111';
 const String STAKE_ADDRESS = '00000000000000000000000000000000000000000000';
@@ -41,12 +42,9 @@ class Transaction {
   }
 
   Transaction(this._fromAddress, this._toAddress, this._amount);
-  Transaction.fromMap(Map unresolvedTransaction) {
-    if (unresolvedTransaction.containsKey('fromAddress') &&
-        unresolvedTransaction.containsKey('toAddress') &&
-        unresolvedTransaction.containsKey('amount') &&
-        unresolvedTransaction.containsKey('signature') &&
-        unresolvedTransaction.containsKey('timestamp')) {
+  Transaction.fromMap(Map<String, dynamic> unresolvedTransaction) {
+    if (containsKeys(unresolvedTransaction,
+        ['fromAddress', 'toAddress', 'amount', 'signature', 'timestamp'])) {
       _fromAddress = unresolvedTransaction['fromAddress'];
       if (_fromAddress == 'null') {
         _fromAddress = null;
@@ -80,7 +78,7 @@ class Transaction {
   }
 
   Map toMap() {
-    return {
+    return <String, dynamic>{
       'fromAddress': _fromAddress,
       'toAddress': _toAddress,
       'amount': _amount,

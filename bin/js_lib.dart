@@ -23,10 +23,10 @@ void main() {
   }
 
   // Wallet
-  js.context['labcoin_createLabcoinWallet'] = createWallet;
+  js.context['labcoin_createWallet'] = createWallet;
   js.context['labcoin_createRandomWallet'] = createRandomWallet;
-  js.context['labcoin_getPublicLabcoinAddress'] = getPublicAddress;
-  js.context['labcoin_getPrivateLabcoinKey'] = getPrivateKey;
+  js.context['labcoin_getPublicAddress'] = getPublicAddress;
+  js.context['labcoin_getPrivateKey'] = getPrivateKey;
 
   // Transaction
   js.context['labcoin_createTransaction'] = createTransaction;

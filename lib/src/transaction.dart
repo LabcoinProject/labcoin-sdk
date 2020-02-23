@@ -71,10 +71,7 @@ class Transaction {
 
   @override
   String toString() {
-    return _fromAddress.toString() +
-        _toAddress.toString() +
-        _amount.toString() +
-        _timestamp.toString();
+    return '$_fromAddress:$_toAddress:${_amount.toString()}:${_timestamp.toString()}';
   }
 
   Map toMap() {

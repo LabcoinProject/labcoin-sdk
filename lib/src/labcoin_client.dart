@@ -29,6 +29,20 @@ class LabcoinClient {
   void sendBlock(Block block) =>
       post('${nodeAddress.toString()}block', body: jsonEncode(block.toMap()));
 
+  Future<BlockchainInfo> getBlockchainInfo() async {
+    var response = await get('${nodeAddress.toString()}blockchain');
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+
+      var firstBlock = Block.fromMap(body['firstBlock']);
+      var lastBlock = Block.fromMap(body['lastBlock']);
+      var proofOfWorkChar = body['proofOfWorkChar'];
+      var difficulty = body['difficulty'];
+      return BlockchainInfo(difficulty, proofOfWorkChar, firstBlock, lastBlock);
+    }
+    return null;
+  }
+
   Future<List<Block>> getFullBlockchain() async => _sendBlockchainRequest('full');
 
   Future<List<Block>> getNewestBlocks(int length) async {

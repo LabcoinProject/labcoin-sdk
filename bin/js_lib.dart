@@ -18,7 +18,7 @@ void main() {
 
   Transaction signTransaction(
       Transaction transaction, String privateKey) {
-    transaction.signTransaction(ECPrivateKey.fromString(privateKey));
+    transaction.sign(ECPrivateKey.fromString(privateKey));
     return transaction;
   }
 

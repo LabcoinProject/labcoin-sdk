@@ -2,11 +2,11 @@ import 'package:labcoin_sdk/labcoin_sdk.dart';
 
 Future<void> main() async {
   // Establish a Connection to a Labcoin Node
-  var labcoinClient = LabcoinClient(LabcoinUri('localhost:3000'));
+  var labcoinClient = LabcoinClient(LabcoinUri('localhost:3001'));
 
   // Request the Wallet Balance of a specific Wallet address
   var stake = await labcoinClient
-      .getWalletBalance('00000000000000000000000000000000000000000000');
+      .getAddress('A8sCvSG5hZknd3NklLlaF7pRpGxVUQdo5Ceh6KyXruBs');
 
   // Get the last/newest Block of the Blockchain
   var lastBlock = await labcoinClient.getNewestBlocks(1);
@@ -17,7 +17,7 @@ Future<void> main() async {
   // Get the full Blockchain
   var fullBlockchain = await labcoinClient.getFullBlockchain();
 
-  print('Stake: ${stake.toString()}');
+  print('Stake: ${stake.funds.toString()}');
   print('---[START] Last Block ---');
   print(lastBlock);
   print('---[END] Last Block ---\n---[START] First Block ---');

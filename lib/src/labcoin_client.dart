@@ -8,22 +8,30 @@ class LabcoinClient {
 
   LabcoinClient(this.nodeAddress);
 
-  Future<List> _sendBlockchainRequest(String pathSegment) async {
+  Future<List<Block>> _sendBlockchainRequest(String pathSegment) async {
     var response =
         await get('${nodeAddress.toString()}blockchain/$pathSegment');
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      var body = jsonDecode(response.body);
+      var blocks = <Block>[];
+      body.forEach((var trx) {
+        blocks.add(Block.fromMap(trx));
+      });
+      return blocks;
     }
     return null;
   }
 
-  void sendTransaction(Transaction transaction) =>
+  void sendTransaction(BlockDataType transaction) =>
       post('${nodeAddress.toString()}transaction',
           body: jsonEncode(transaction.toMap()));
 
-  Future<List> getFullBlockchain() async => _sendBlockchainRequest('full');
+  void sendBlock(Block block) =>
+      post('${nodeAddress.toString()}block', body: jsonEncode(block.toMap()));
 
-  Future<List> getNewestBlocks(int length) async {
+  Future<List<Block>> getFullBlockchain() async => _sendBlockchainRequest('full');
+
+  Future<List<Block>> getNewestBlocks(int length) async {
     if (!length.isNegative) {
       length *= -1;
     }
@@ -31,7 +39,7 @@ class LabcoinClient {
     return _sendBlockchainRequest(lengthString);
   }
 
-  Future<List> getOldestBlocks(int length) async {
+  Future<List<Block>> getOldestBlocks(int length) async {
     if (length.isNegative) {
       length *= -1;
     }
@@ -39,25 +47,38 @@ class LabcoinClient {
     return _sendBlockchainRequest(lengthString);
   }
 
-  Future<int> getWalletBalance(String walletAddress) async {
-    var response = await get(
-        '${nodeAddress.toString()}wallet?walletId=${Uri.encodeQueryComponent(walletAddress)}');
+  Future<List<Transaction>> getMemPoolTransactions(String walletAddress) async {
+    var response = await get('${nodeAddress.toString()}mempool/transactions');
     if (response.statusCode == 200) {
-      return jsonDecode(response.body)['funds'] as int;
+      var body = jsonDecode(response.body);
+      var memPoolTransactions = <BlockDataType>[];
+      body.forEach((var trx) {
+        if (trx['type'] == Generic.TYPE) {
+          memPoolTransactions.add(Generic.fromMap(trx));
+        } else if (trx['type'] == Transaction.TYPE) {
+          memPoolTransactions.add(Transaction.fromMap(trx));
+        }
+      });
+      return memPoolTransactions;
     }
     return null;
   }
 
-  Future<List<Transaction>> getWalletTransactions(String walletAddress) async {
+  Future<LabcoinAddress> getAddress(String walletAddress) async {
     var response = await get(
-        '${nodeAddress.toString()}wallet/transactions?walletId=${Uri.encodeQueryComponent(walletAddress)}');
+        '${nodeAddress.toString()}wallet/${Uri.encodeQueryComponent(walletAddress)}');
     if (response.statusCode == 200) {
-      var trxList = <Transaction>[];
-      (jsonDecode(response.body)['transactions'] as List<Map<String, dynamic>>)
-          .forEach((var trx) {
-        trxList.add(Transaction.fromMap(trx));
+      var body = jsonDecode(response.body);
+      var funds = body['funds'] as int;
+      var transactions = <Transaction>[];
+      body['transactions'].forEach((var trx) {
+        transactions.add(Transaction.fromMap(trx));
       });
-      return trxList;
+      var memPoolTransactions = <Transaction>[];
+      body['memPoolTransactions'].forEach((var trx) {
+        memPoolTransactions.add(Transaction.fromMap(trx));
+      });
+      return LabcoinAddress(walletAddress, funds, transactions, memPoolTransactions);
     }
     return null;
   }

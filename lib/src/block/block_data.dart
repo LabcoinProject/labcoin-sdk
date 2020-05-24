@@ -1,15 +1,7 @@
 import 'package:labcoin_sdk/labcoin_sdk.dart';
 
 import '../utils/merkle_tree.dart';
-
-BlockDataType getBlockDataType(String type, Map<String, dynamic> map) {
-  if (type == Transaction.TYPE) {
-    return Transaction.fromMap(map);
-  } else if (type == Generic.TYPE) {
-    return Generic.fromMap(map);
-  }
-  return null;
-}
+import '../utils/utils.dart';
 
 class BlockData {
   final List<BlockDataType> _entries = <BlockDataType>[];
@@ -18,7 +10,7 @@ class BlockData {
 
   BlockData.fromList(List<Map<String, dynamic>> list) {
     for (var entry in list) {
-      var entryElement = getBlockDataType(entry['type'], entry);
+      var entryElement = getBlockDataTypeFromMap(entry);
       if (entryElement != null) _entries.add(entryElement);
     }
   }

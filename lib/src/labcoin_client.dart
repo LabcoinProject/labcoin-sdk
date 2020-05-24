@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:labcoin_sdk/labcoin_sdk.dart';
+import 'package:labcoin_sdk/src/utils/utils.dart';
 
 class LabcoinClient {
   LabcoinUri nodeAddress;
@@ -67,10 +68,9 @@ class LabcoinClient {
       var body = jsonDecode(response.body);
       var memPoolTransactions = <BlockDataType>[];
       body.forEach((var trx) {
-        if (trx['type'] == Generic.TYPE) {
-          memPoolTransactions.add(Generic.fromMap(trx));
-        } else if (trx['type'] == Transaction.TYPE) {
-          memPoolTransactions.add(Transaction.fromMap(trx));
+        var resolvedTrx = getBlockDataTypeFromMap(trx);
+        if (response == null) {
+          memPoolTransactions.add(resolvedTrx);
         }
       });
       return memPoolTransactions;
@@ -84,13 +84,13 @@ class LabcoinClient {
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
       var funds = body['funds'] as int;
-      var transactions = <Transaction>[];
+      var transactions = <BlockDataType>[];
       body['transactions'].forEach((var trx) {
-        transactions.add(Transaction.fromMap(trx));
+        transactions.add(getBlockDataTypeFromMap(trx));
       });
-      var memPoolTransactions = <Transaction>[];
+      var memPoolTransactions = <BlockDataType>[];
       body['memPoolTransactions'].forEach((var trx) {
-        memPoolTransactions.add(Transaction.fromMap(trx));
+        memPoolTransactions.add(getBlockDataTypeFromMap(trx));
       });
       return LabcoinAddress(walletAddress, funds, transactions, memPoolTransactions);
     }

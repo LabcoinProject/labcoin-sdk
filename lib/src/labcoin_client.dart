@@ -61,7 +61,7 @@ class LabcoinClient {
     return _sendBlockchainRequest(lengthString);
   }
 
-  Future<List<Transaction>> getMemPoolTransactions(String walletAddress) async {
+  Future<List<BlockDataType>> getMemPoolTransactions() async {
     var response = await get('${nodeAddress.toString()}mempool/transactions');
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);

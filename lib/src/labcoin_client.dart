@@ -69,7 +69,7 @@ class LabcoinClient {
       var memPoolTransactions = <BlockDataType>[];
       body.forEach((var trx) {
         var resolvedTrx = getBlockDataTypeFromMap(trx);
-        if (response == null) {
+        if (response != null) {
           memPoolTransactions.add(resolvedTrx);
         }
       });

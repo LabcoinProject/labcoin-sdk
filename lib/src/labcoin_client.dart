@@ -30,6 +30,10 @@ class LabcoinClient {
   void sendBlock(Block block) =>
       post('${nodeAddress.toString()}block', body: jsonEncode(block.toMap()));
 
+  void registerNode(String uri, String address) =>
+      post('${nodeAddress.toString()}node',
+          body: jsonEncode({'uri': uri, 'address': address}));
+
   Future<BlockchainInfo> getBlockchainInfo() async {
     var response = await get('${nodeAddress.toString()}blockchain');
     if (response.statusCode == 200) {
